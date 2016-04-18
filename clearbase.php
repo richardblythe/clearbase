@@ -3,7 +3,7 @@
     Plugin Name: Clearbase
     Plugin URI: http://www.unity3software.com/clearbase
     Description: A powerfully easy framework for adding/editing Wordpress media folders.
-    Version: 1.7.3
+    Version: 1.7.5
     Author: Richard Blythe
     Author URI: http://unity3software.com/richard-blythe
     GitHub Plugin URI: https://github.com/richardblythe/clearbase
