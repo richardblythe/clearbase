@@ -6,6 +6,7 @@
     Version: 1.7.3
     Author: Richard Blythe
     Author URI: http://unity3software.com/richard-blythe
+    GitHub Plugin URI: https://github.com/richardblythe/clearbase
  */
 
 function _clearbase_init() {
