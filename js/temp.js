@@ -1,3 +1,5 @@
+    //sample commented
+
     var postId = clearbase.post.ID;
     $submitpost = $('#submitpost'),
     releaseLock = true,
