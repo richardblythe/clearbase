@@ -7,7 +7,7 @@
   Author URI: http://unity3software.com/richardblythe
  */
 
-define( 'FLEX_SLIDER_VERSION', '1.0.0' );
+define( 'FLEX_SLIDER_VERSION', '1.2.0' );
 
 function Clearbase_FlexSlider_Load() {
     add_image_size('flexslider-default', 1140, 460, true);
@@ -58,8 +58,8 @@ function Clearbase_FlexSlider_Load() {
         }
 
         public function Enqueue() {
-            $this->register_script('clearbase_flexslider', plugins_url('jquery.flexslider-min.js', __FILE__), array( 'jquery' ), FLEX_SLIDER_VERSION);
-            $this->register_style( 'clearbase_flexslider_style', plugins_url('flexslider.css', __FILE__), array(), FLEX_SLIDER_VERSION );
+            $this->register_script('clearbase-flexslider', plugins_url('jquery.flexslider-min.js', __FILE__), array( 'jquery' ), FLEX_SLIDER_VERSION);
+            $this->register_style( 'clearbase-flexslider-style', plugins_url('flexslider.min.css', __FILE__), array(), FLEX_SLIDER_VERSION );
         }
 
         public function Render($data = null) {
