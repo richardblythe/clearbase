@@ -3,7 +3,7 @@
 function clearbase_get_attachments($type = '', $folder_id = null) {
     $folder = clearbase_load_folder($folder_id);
     if (is_wp_error($folder))
-      return $folder;
+        return $folder;
 
     return get_posts(apply_filters('clearbase_query_media_args', array(
         'post_type'      => 'attachment',
@@ -20,13 +20,13 @@ function clearbase_get_attachments($type = '', $folder_id = null) {
 function clearbase_get_first_attachment($type = '', $folder_id = null) {
     $folder = clearbase_load_folder($folder_id);
     if (is_wp_error($folder))
-      return $folder;
+        return $folder;
 
     global $wpdb;
     $folder_id = absint($folder->ID);
     $order = clearbase_get_value('postmeta.attachment_order', 'DESC', $folder);
     if ('ASC' == $order || 'DESC' == $order)
-      $order = 'DESC'; //force a proper sorting order
+        $order = 'DESC'; //force a proper sorting order
     $and_where_mime = wp_post_mime_type_where( $type );
     $attachment = $wpdb->get_row("SELECT * FROM $wpdb->posts WHERE post_parent = $folder_id 
       AND post_type='attachment' $and_where_mime ORDER BY menu_order $order LIMIT 1");
@@ -38,7 +38,7 @@ function clearbase_get_first_attachment($type = '', $folder_id = null) {
 function clearbase_query_attachments($type = '', $folder_id = null) {
     $post = get_post($folder_id);
     if (!isset($post) || 'clearbase_folder' != $post->post_type)
-      return new WP_Error('clearbase_invalid_folder', __('You must specify a valid clearbase folder', 'clearbase'));
+        return new WP_Error('clearbase_invalid_folder', __('You must specify a valid clearbase folder', 'clearbase'));
 
     return new WP_Query(apply_filters('clearbase_query_media_args', array(
         'post_type'      => 'attachment',
@@ -52,26 +52,26 @@ function clearbase_query_attachments($type = '', $folder_id = null) {
 }
 
 function clearbase_validate_attachment_filter($filter = '', $context = 'all') {
-  
-  if (empty($filter) || empty($context) || 'all' == $context)
-    return '';
 
-  $arr_context = explode('|', $context);
-  if (false != in_array('all', $arr_context))
-    return '';
+    if (empty($filter) || empty($context) || 'all' == $context)
+        return '';
 
-  // $count = count($arr_context);
-  // switch ($arr_context[0]) {
-  //   case 'image':
-  //     for ($i=1; $i < $count; $i++) { 
-  //       if (in_array($arr_context))
-  //     }
-  //     break;
-    
-  //   default:
-  //     # code...
-  //     break;
-  // }
+    $arr_context = explode('|', $context);
+    if (false != in_array('all', $arr_context))
+        return '';
+
+    // $count = count($arr_context);
+    // switch ($arr_context[0]) {
+    //   case 'image':
+    //     for ($i=1; $i < $count; $i++) {
+    //       if (in_array($arr_context))
+    //     }
+    //     break;
+
+    //   default:
+    //     # code...
+    //     break;
+    // }
 
 }
 
@@ -89,7 +89,7 @@ function clearbase_validate_attachment_filter($filter = '', $context = 'all') {
  * @global wpdb $wpdb
  *
  * @param int $post_id.  The ID of parent post
- *  
+ *
  * @param string|array $mime_type Optional. Array or comma-separated list of
  *                                MIME patterns. Default empty.
  * @return object An object containing the attachment counts by mime type.
@@ -98,7 +98,7 @@ function clearbase_count_attachments($post = null, $mime_type = '' ) {
     global $wpdb;
 
     if (!$post = get_post($post))
-        throw new WP_Error('invalid_post', 'You must specify a valid post!');
+        return new WP_Error('invalid_post', 'You must specify a valid post!');
 
     $and = wp_post_mime_type_where( $mime_type );
     $count = $wpdb->get_results( $wpdb->prepare("SELECT post_mime_type, COUNT( * ) AS num_posts FROM $wpdb->posts 
@@ -148,25 +148,77 @@ add_filter( 'wp_insert_attachment_data', 'clearbase_insert_attachment_data', 10,
 
 function clearbase_get_image_sizes() {
 
-  $builtin_sizes = array(
-    'large'   => array(
-      'width'  => get_option( 'large_size_w' ),
-      'height' => get_option( 'large_size_h' ),
-    ),
-    'medium'  => array(
-      'width'  => get_option( 'medium_size_w' ),
-      'height' => get_option( 'medium_size_h' ),
-    ),
-    'thumbnail' => array(
-      'width'  => get_option( 'thumbnail_size_w' ),
-      'height' => get_option( 'thumbnail_size_h' ),
-      'crop'   => get_option( 'thumbnail_crop' ),
-    ),
-  );
+    $builtin_sizes = array(
+        'large'   => array(
+            'width'  => get_option( 'large_size_w' ),
+            'height' => get_option( 'large_size_h' ),
+        ),
+        'medium'  => array(
+            'width'  => get_option( 'medium_size_w' ),
+            'height' => get_option( 'medium_size_h' ),
+        ),
+        'thumbnail' => array(
+            'width'  => get_option( 'thumbnail_size_w' ),
+            'height' => get_option( 'thumbnail_size_h' ),
+            'crop'   => get_option( 'thumbnail_crop' ),
+        ),
+    );
 
-  global $_wp_additional_image_sizes;
-  $additional_sizes = $_wp_additional_image_sizes ? $_wp_additional_image_sizes : array();
+    global $_wp_additional_image_sizes;
+    $additional_sizes = $_wp_additional_image_sizes ? $_wp_additional_image_sizes : array();
 
-  return array_merge( $builtin_sizes, $additional_sizes );
+    return array_merge( $builtin_sizes, $additional_sizes );
 
+}
+
+/**
+ * Retrieve an attachment page link using an image or icon, if possible.
+ *
+ * @since 2.5.0
+ * @since 4.4.0 The `$id` parameter can now accept either a post ID or `WP_Post` object.
+ *
+ * @param int|WP_Post  $id        Optional. Attachment ID or post object.
+ * @param string|array $size      Optional. Image size. Accepts any valid image size, or an array
+ *                                of width and height values in pixels (in that order).
+ *                                Default 'thumbnail'.
+ * @param bool         $permalink Optional, Whether to add permalink to image. Default false.
+ * @param bool         $icon      Optional. Whether the attachment is an icon. Default false.
+ * @param string|false $text      Optional. Link text to use. Activated by passing a string, false otherwise.
+ *                                Default false.
+ * @param array|string $attr      Optional. Array or string of attributes. Default empty.
+ * @return string HTML content.
+ */
+function clearbase_get_attachment_parent_link( $id = 0, $size = 'thumbnail', $icon = false, $text = false, $attr = '' ) {
+    $_post = get_post( $id );
+
+    if ( empty( $_post ) || ( 'attachment' != $_post->post_type ) || !$post_parent = get_post($_post->post_parent) )
+        return __( 'Missing Attachment' );
+
+    $url = get_permalink( $post_parent->ID );
+
+    if ( $text ) {
+        $link_text = $text;
+    } elseif ( $size && 'none' != $size ) {
+        $link_text = wp_get_attachment_image( $_post->ID, $size, $icon, $attr );
+    } else {
+        $link_text = '';
+    }
+
+    if ( trim( $link_text ) == '' )
+        $link_text = $post_parent->post_title;
+
+    /**
+     * Filter a retrieved attachment parent page link.
+     *
+     * @since 2.7.0
+     *
+     * @param string       $link_html The page link HTML output.
+     * @param int          $id        Post ID.
+     * @param string|array $size      Size of the image. Image size or array of width and height values (in that order).
+     *                                Default 'thumbnail'.
+     * @param bool         $permalink Whether to add permalink to image. Default false.
+     * @param bool         $icon      Whether to include an icon. Default false.
+     * @param string|bool  $text      If string, will be link text. Default false.
+     */
+    return apply_filters( 'clearbase_get_attachment_parent_link', "<a href='$url'>$link_text</a>", $id, $size, $permalink, $icon, $text );
 }
