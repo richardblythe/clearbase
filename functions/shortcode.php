@@ -204,6 +204,7 @@ function clearbase_gallery_shortcode( $attr ) {
 
         $if_statements = '';
         $if_var = 'if';
+        $arr_columns[10000] = $columns;//ensure the default column settings will be enforced as the last fallback
         ksort($arr_columns);
         foreach ($arr_columns as $width => $cols) {
             $if_statements .= "
@@ -221,7 +222,7 @@ function clearbase_gallery_shortcode( $attr ) {
                 var update_columns = function() {
                     var columns = 0;
                     {$if_statements} 
-                    if (0 != columns) {
+                    if ( 0 != columns && !gallery.hasClass('gallery-columns-' + columns) ) {
                         gallery.removeClass (function (index, css) {
                             return (css.match (/\bgallery-columns-\S+/g) || []).join(' ');
                         }).addClass('gallery-columns-' + columns);
