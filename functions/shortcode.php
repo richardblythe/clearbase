@@ -205,10 +205,10 @@ function clearbase_gallery_shortcode( $attr ) {
         $if_statements = '';
         $if_var = 'if';
         ksort($arr_columns);
-        foreach ($arr_columns as $width => $columns) {
+        foreach ($arr_columns as $width => $cols) {
             $if_statements .= "
                 {$if_var} ( window.innerWidth < {$width} )
-                    columns = $columns;
+                    columns = $cols;
             ";
             if ('if' == $if_var)
                 $if_var = 'else if';
