@@ -36,12 +36,13 @@ class Clearbase_Subview_Folder extends Clearbase_Subview {
                     'css' 	=> 'min-width:300px;'
                 ),
                 array(
-                    'id'        => 'postmeta.page_append',
-                    'title'     => __( "Append To Page", 'clearbase' ),
-                    'desc'      => __( "Specifies a page to append the {$labels->singular_name}", 'clearbase' ),
-                    'type'      => 'select',
-                    'options'   => $opt_pages,
-                    'default'   => '0'
+                    'id'            => 'postmeta.page_append',
+                    'title'         => __( "Append To Page", 'clearbase' ),
+                    'desc'          => __( "Specifies a page to append the {$labels->singular_name}", 'clearbase' ),
+                    'type'          => 'select',
+                    'options'       => $opt_pages,
+                    'default'       => '0',
+                    'capability'    => 'manage_options'
                 ),
                 array(
                     'id'        => 'folder',

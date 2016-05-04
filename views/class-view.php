@@ -64,6 +64,11 @@ class Clearbase_View {
 
             if ( ! isset( $field['id'] ) )
                 continue;
+            if (!isset($field['capability']))
+                $field['capability'] = 'edit_posts';
+            if (! current_user_can( $field['capability']))
+                continue;
+
             $convertedID = str_replace('.', '-', $field['id']);
             
             $type = isset( $field['type'] ) ? sanitize_title( $field['type'] ) : '';
@@ -170,7 +175,12 @@ class Clearbase_View {
         $post = $cb_post;
 
         foreach ( $this->fields as $field ) {
-        if ( ! isset( $field['type'] ) ) continue;
+            if ( ! isset( $field['type'] ) ) continue;
+            if (!isset($field['capability']))
+                $field['capability'] = 'edit_posts';
+            if (! current_user_can( $field['capability']))
+                continue;
+
 	    	if ( ! isset( $field['id'] ) ) $field['id'] = '';
 	    	if ( ! isset( $field['title'] ) ) $field['title'] = isset( $field['name'] ) ? $field['name'] : '';
 	    	if ( ! isset( $field['class'] ) ) $field['class'] = '';
