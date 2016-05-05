@@ -199,9 +199,13 @@ class Clearbase_View_Folder extends Clearbase_View {
 
 
     protected function render_subfolder($post) {
-      $url = clearbase_workspace_url(array('id' => $post->ID));
-      $classes = apply_filters("clearbase_{$this->ID()}_subfolder_classes", array('clearbase-folder'));
-      $data = apply_filters("clearbase_{$this->ID()}_subfolder_data", array('menu-order' => $post->menu_order)); 
+        $url = clearbase_workspace_url(array('id' => $post->ID));
+        $classes = apply_filters("clearbase_{$this->ID()}_subfolder_classes", array('clearbase-folder'));
+
+        $settings = clearbase_get_folder_settings($post);
+        if ($settings['allow_folders'])
+            $classes[] = 'allow-folders';
+        $data = apply_filters("clearbase_{$this->ID()}_subfolder_data", array('menu-order' => $post->menu_order));
     ?>
       <li id="post-<?php echo $post->ID; ?>" class="<?php echo implode(' ', $classes) ?>" <?php echo clearbase_html_serialize_data($data) ?> >
         <?php echo $this->render_subfolder_actions($post); ?>

@@ -20,12 +20,10 @@ class Clearbase_View_Controller extends Clearbase_View {
          **********************************
         return array(
             //Specifies if child folders are shown
-            'child_folders'       => true,
-
-            //Specifies if child folders are allowed to create child folders of their own
-            //(Defaults to: 'show_nesting') 
-            'allow_child_nesting' => true, 
-
+            'allow_folders'  => $allow_folders,
+    
+            'allow_media' => !$allow_folders,
+    
             'media_filter' => 'image'
         );
         */

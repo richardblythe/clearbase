@@ -233,8 +233,8 @@ jQuery(document).ready( function($) {
     //refresh folder positions during sorting so that droppable operations will work correctly
     $sortables.filter('.folders').sortable('option', { refreshPositions: true });
 
-
-    $(".clearbase-folder").droppable({
+    
+    $(".clearbase-folder.allow-folders").droppable({
         hoverClass: "ui-droppable-hover",
         tolerance: 'pointer',
         drop: function(event, ui) {
