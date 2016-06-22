@@ -86,7 +86,7 @@
   }
 
   function get_clearbase_folder_id() {
-    return $GLOBALS[$cb_post_id];
+    return $GLOBALS['cb_post_id'];
   }
 
   function clearbase_folder_id() {
@@ -103,18 +103,27 @@
       ));
   }
 
-  function clearbase_query_subfolders($folder_id = null) {
+  function clearbase_query_subfolders($folder_id = null, $folders_per_page = -1) {
       $folder = (null == $folder_id || 0 == $folder_id ? null : clearbase_load_folder($folder_id));
       if (is_wp_error($folder))
         return $folder;
 
-      return new WP_Query(apply_filters('clearbase_query_subfolders_args', array(
+      $args = array(
           'post_type' => 'clearbase_folder',
           'post_parent' => null == $folder ? 0 : $folder->ID,
           'orderby'    => 'menu_order',
           'order'      => 'DESC',
           'posts_per_page'=> -1
-      )));
+      );
+
+      if ((int)$folders_per_page > 0) {
+          $args['posts_per_page'] = (int)$folders_per_page; //make sure the var is an integer
+          global $wp_query;
+          $var_name = isset($wp_query->query['page']) ? 'page' : 'paged';
+          $args['paged'] = $wp_query->query[$var_name] ? $wp_query->query[$var_name] : 1;
+      }
+      
+      return new WP_Query(apply_filters('clearbase_query_subfolders_args', $args));
   }
 
   function clearbase_query_all_folders() {
