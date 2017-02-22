@@ -92,7 +92,7 @@ class Clearbase_Recent_Images_Widget extends WP_Widget {
               foreach ($attachments as $a)
                   $IDs[] = $a->ID;
 
-              add_filter( 'gallery_style', array(&$this, 'inject_gallery_style'), 10, 1 );
+              add_filter( 'gallery_image_caption', '__return_empty_string');
               add_filter( 'wp_get_attachment_image_attributes', array(&$this, 'image_attributes'), 10, 3);
               if ('parent' == $link_to) 
                 add_filter( 'attachment_link', array(&$this, 'link_to_parent'), 20, 2);
@@ -104,7 +104,7 @@ class Clearbase_Recent_Images_Widget extends WP_Widget {
                 'size'      => $image_size,
                 'link'      => $link_to
               ));
-              remove_filter( 'gallery_style', array(&$this, 'inject_gallery_style'), 10, 1 );
+              remove_filter( 'gallery_image_caption', '__return_empty_string');
               remove_filter( 'wp_get_attachment_image_attributes', array(&$this, 'image_attributes'), 10, 3);
               if ('parent' == $link_to) 
                 remove_filter( 'attachment_link', array(&$this, 'link_to_parent'), 20, 2);
