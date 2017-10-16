@@ -41,6 +41,7 @@ function clearbase_update_sorting($args, $wp_error = true) {
     global $wpdb;
     $sql = "UPDATE `{$wpdb->posts}` SET menu_order=%d, post_modified=%s,
         post_modified_gmt=%s WHERE ID=%d";
+
     foreach ($args as $post_id => $menu_order) {
         if (false === $wpdb->query( $wpdb->prepare( $sql, 
             $menu_order, 

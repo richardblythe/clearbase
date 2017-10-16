@@ -96,9 +96,10 @@ class Clearbase_Recent_Images_Widget extends WP_Widget {
               add_filter( 'wp_get_attachment_image_attributes', array(&$this, 'image_attributes'), 10, 3);
               if ('parent' == $link_to) 
                 add_filter( 'attachment_link', array(&$this, 'link_to_parent'), 20, 2);
+
               echo clearbase_gallery_shortcode(array(
                 'ids'       => $IDs,
-                'orderby'   => 'modified',
+                'orderby'   => 'modified menu_order',
                 'order'     => 'DESC',
                 'columns'   => $columns,
                 'size'      => $image_size,
