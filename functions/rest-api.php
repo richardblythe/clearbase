@@ -1,8 +1,8 @@
 <?php
 add_action( 'rest_api_init', function () {
-	register_rest_route( 'clearbase/v1', '/nth-image-url/(?P<nth>\d+)', array(
+	register_rest_route( 'clearbase/v1', '/nth-image/(?P<nth>\d+)', array(
 		'methods' => 'GET',
-		'callback' => 'clearbase_rest_api_nth_image_url'
+		'callback' => 'clearbase_rest_api_nth_image'
 	) );
 } );
 
@@ -14,7 +14,7 @@ function clearbase_rest_pre_serve_request( $served, $result, $request, $server )
 	// example: https://baconipsum.com/wp-json/baconipsum/test-response?format=text
 	// the default JSON response will be handled automatically by WP-API
 	$attributes = $request->get_attributes();
-	if ('clearbase_rest_api_nth_image_url' == $attributes['callback']) {
+	if (!is_wp_error($result->data) && 'clearbase_rest_api_nth_image' == $attributes['callback']) {
 //		header( 'Content-Type: text/plain; charset=' . get_option( 'blog_charset' ) );
 //		echo $result->data;
 //		$served = true; // tells the WP-API that we sent the response already
@@ -22,8 +22,17 @@ function clearbase_rest_pre_serve_request( $served, $result, $request, $server )
 
 		$uploads = wp_upload_dir();
 
+		//set a default size
+		$size = $request->get_param('size');
+		if ($size != 'full' ) {
+			$sizes = get_intermediate_image_sizes();
+			if (!in_array($size, $sizes)) {
+				$size = $sizes[0];
+			}
+		}
+
 		// Get the image object
-		$image_object = wp_get_attachment_image_src($result->data, 'medium' );
+		$image_object = wp_get_attachment_image_src($result->data->ID, $size );
 		// Isolate the url
 		$image_url = $image_object[0];
 		// Using the wp_upload_dir replace the baseurl with the basedir
@@ -46,19 +55,12 @@ function clearbase_rest_pre_serve_request( $served, $result, $request, $server )
 
 
 /**
- * Grab latest clearbase image url!
+ * Grab latest clearbase image!
  *
  * @param array $data Options for the function.
  * @return string|null Post title for the latest,  * or null if none.
  */
-function clearbase_rest_api_nth_image_url( $data ) {
-	$attachment = clearbase_get_nth_attachment('image', null, $data['nth']);
-
-	if ( !is_wp_error($attachment) )  {
-//		$str = get_attached_file($attachment->ID);
-//		return $str;
-		return $attachment->ID;
-	}
-
-	return 'not working yet';
+function clearbase_rest_api_nth_image( $data ) {
+	//the function: [clearbase_rest_pre_serve_request] serves the actual image...
+	return clearbase_get_nth_attachment('image', null, $data['nth']);
 }
