@@ -133,6 +133,25 @@
       )));
   }
 
+  function clearbase_get_all_folder_ids($settings_filter = null) {
+  	$query = clearbase_query_all_folders();
+  	$postIDs = array();
+  	$valid_settings_filter = is_array($settings_filter);
+  	foreach ($query->get_posts() as $post) {
+	    if ($valid_settings_filter) {
+		    $settings = clearbase_get_folder_settings( $post );
+		    foreach ( $settings_filter as $key => $value) {
+			    if ( clearbase_get_value( $key, $value, $settings ) ) {
+				    $postIDs[] = $post->ID;
+			    }
+	        }
+	    } else {
+		    $postIDs[] = $post->ID;
+	    }
+    }
+    return $postIDs;
+  }
+
   function clearbase_subfolder_count($folder_id = null) {
       $query = clearbase_query_subfolders($folder_id);
       return ($query instanceof WP_Query ? $query->found_posts : 0);

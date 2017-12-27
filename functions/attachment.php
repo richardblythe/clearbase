@@ -34,6 +34,27 @@ function clearbase_get_first_attachment($type = '', $folder_id = null) {
     return $attachment ? new WP_Post($attachment) : null;
 }
 
+function clearbase_get_nth_attachment($type = '', $folder = null, $nth = 1 ) {
+	$folder = clearbase_load_folder($folder);
+	if (is_wp_error($folder))
+		$folder = clearbase_get_all_folder_ids(array('allow_media' => true));
+
+	$all_folders = is_array($folder) ? $folder : array($folder->ID);
+	$attachments = get_posts(array(
+		'post_type'      => 'attachment',
+		'post_mime_type' => $type ? $type : 'image',
+		'post_status'    => 'any',
+		'post_parent__in'    => $all_folders,
+		'orderby'        => 'date',
+		'order'          => 'DESC',
+		'posts_per_page'    => $nth
+	));
+
+	if ($nth <= 0)
+		$nth = 1;
+	return (count($attachments) >= $nth) ? $attachments[$nth-1] : null;
+}
+
 
 function clearbase_query_attachments($type = '', $folder_id = null) {
     $post = get_post($folder_id);

@@ -3,7 +3,7 @@
     Plugin Name: Clearbase
     Plugin URI: http://www.unity3software.com/clearbase
     Description: A powerfully easy framework for adding/editing Wordpress media folders.
-    Version: 1.9.4
+    Version: 2.0
     Author: Richard Blythe
     Author URI: http://unity3software.com/richard-blythe
     GitHub Plugin URI: https://github.com/richardblythe/clearbase
@@ -12,7 +12,7 @@
 //start the clearbase engine
 function _clearbase_init() {
     $wp = wp_upload_dir();
-    define( 'CLEARBASE_VERSION', '1.9.3');
+    define( 'CLEARBASE_VERSION', '2.0');
     define( 'CLEARBASE_DIR', untrailingslashit(plugin_dir_path( __FILE__ ))); //dirname gets us the file location without the trailing slash
     define( 'CLEARBASE_URL', untrailingslashit(plugins_url( '/', __FILE__ )));
     define( 'CLEARBASE_UPLOADS_DIR', $wp['basedir'] . '/clearbase');
@@ -52,7 +52,8 @@ function _clearbase_init() {
     ));
 
     require_once (CLEARBASE_DIR . '/functions/core.php');
-    require_once (CLEARBASE_DIR . '/functions/folder.php');
+	require_once (CLEARBASE_DIR . '/functions/rest-api.php');
+	require_once (CLEARBASE_DIR . '/functions/folder.php');
     require_once (CLEARBASE_DIR . '/functions/attachment.php');
     
     require_once (CLEARBASE_DIR . '/functions/shortcode.php');
@@ -64,6 +65,7 @@ function _clearbase_init() {
     //** Load bundled **
     require_once (CLEARBASE_DIR . '/includes/flexslider/flexslider.php');
     require_once (CLEARBASE_DIR . '/includes/recent-images-widget/recent-images-widget.php');
+
 
     if (defined('DOING_AJAX') && DOING_AJAX) {
         require_once (CLEARBASE_DIR .'/functions/ajax.php');
