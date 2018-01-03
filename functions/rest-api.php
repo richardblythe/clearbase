@@ -4,6 +4,12 @@ add_action( 'rest_api_init', function () {
 		'methods' => 'GET',
 		'callback' => 'clearbase_rest_api_nth_image'//?size=[],format=['id, image, url,'title',caption']
 	) );
+
+	register_rest_route( 'clearbase/v1', '/get-children/(?P<folder_id>\d+)', array(
+		'methods' => 'GET',
+		'callback' => 'clearbase_rest_api_get_children'
+	) );
+	
 } );
 
 
@@ -92,4 +98,8 @@ function clearbase_rest_pre_serve_request( $served, $result, $request, $server )
 function clearbase_rest_api_nth_image( $data ) {
 	//the function: [clearbase_rest_pre_serve_request] serves the actual image...
 	return clearbase_get_nth_attachment('image', null, $data['nth'], true);
+}
+
+function clearbase_rest_api_get_children($data) {
+	return clearbase_get_children($data['folder_id']);
 }
