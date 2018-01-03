@@ -127,7 +127,7 @@
   }
 
   function clearbase_query_all_folders() {
-      return new WP_Query(apply_filters('clearbase_query_all_folders_args', array(
+  	return new WP_Query(apply_filters('clearbase_query_all_folders_args', array(
         'post_type' => 'clearbase_folder',
         'posts_per_page' => -1
       )));
@@ -177,10 +177,31 @@
       }
     }
 
-    return new WP_Error('clearbase_invalid_folder', __('You must specify valid data to retrieve a clearbaser folder', 'clearbase'));
-  } 
+    return new WP_Error('clearbase_invalid_folder', __('You must specify valid data to retrieve a clearbase folder', 'clearbase'));
+  }
 
-  function clearbase_default_folder_image_src($folder_id = null, $image_size = 'thumbnail') {
+	/**
+	 * Get an array of Clearbase folders.
+	 *
+	 * @param mixed $data WP data to load the folder.  If $data is the default: null, the global $post var will be evalutated as the data.  If the evalutated post is an attachment, then it's parent folder will be returned
+	 * @return mixed|array|WP_Error The folder or a WP error.
+	 */
+	function clearbase_get_folders($data = null) {
+
+		$folders = array();
+		$post = null;
+		foreach ($data as $d) {
+			$post = get_post($d);
+			if (isset($post)) {
+				if ('clearbase_folder' == $post->post_type)
+					$folders[$post->ID] = $post;
+			}
+		}
+
+		return $folders;
+	}
+
+function clearbase_default_folder_image_src($folder_id = null, $image_size = 'thumbnail') {
       $folder = clearbase_load_folder($folder_id);
       if (is_wp_error($folder))
         return $folder;

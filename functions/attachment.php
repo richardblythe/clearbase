@@ -1,19 +1,24 @@
 <?php
+function clearbase_get_attachments($type = '', $folder = null, $max = -1, $query_args = null) {
+    //allow another method to return an array of attachments
+	$result = apply_filters('clearbase_get_attachments_pre', array($type, $folder, $max, $query_args));
+	//if another method has returned an array value, we'll assume that it's an array of attachments
+    if (is_array($result))
+		return $result;
 
-function clearbase_get_attachments($type = '', $folder_id = null) {
-    $folder = clearbase_load_folder($folder_id);
-    if (is_wp_error($folder))
-        return $folder;
+	$folders = clearbase_get_folders(is_array($folder) ? $folder : array($folder));
+	$folder = is_array($folder) ? null : clearbase_load_folder($folder);
 
-    return get_posts(apply_filters('clearbase_query_media_args', array(
-        'post_type'      => 'attachment',
-        'post_mime_type' => $type,
-        'post_status'    => 'any',
-        'post_parent'    => $folder->ID,
-        'orderby'        => 'menu_order',
-        'order'          => clearbase_get_value('postmeta.attachment_order', 'DESC', $folder->ID),
-        'posts_per_page'    => -1
-    )));
+    $query_args = wp_parse_args($query_args, array(
+	    'post_type'      => 'attachment',
+	    'post_mime_type' => $type,
+	    'post_status'    => 'any',
+	    'post_parent__in'    => array_keys($folders),
+	    'orderby'        => array('menu_order', clearbase_get_value('postmeta.attachment_order', 'DESC', $folder)),
+	    'posts_per_page'    => $max
+    ));
+
+    return get_posts(apply_filters('clearbase_query_media_args', $query_args));
 
 }
 
@@ -34,25 +39,15 @@ function clearbase_get_first_attachment($type = '', $folder_id = null) {
     return $attachment ? new WP_Post($attachment) : null;
 }
 
-function clearbase_get_nth_attachment($type = '', $folder = null, $nth = 1 ) {
-	$folder = clearbase_load_folder($folder);
-	if (is_wp_error($folder))
-		$folder = clearbase_get_all_folder_ids(array('allow_media' => true));
-
-	$all_folders = is_array($folder) ? $folder : array($folder->ID);
-	$attachments = get_posts(array(
-		'post_type'      => 'attachment',
-		'post_mime_type' => $type ? $type : 'image',
-		'post_status'    => 'any',
-		'post_parent__in'    => $all_folders,
-		'orderby'        => 'date',
-		'order'          => 'DESC',
-		'posts_per_page'    => $nth
-	));
-
+function clearbase_get_nth_attachment($type = '', $folder = null, $nth = 1) {
 	if ($nth <= 0)
 		$nth = 1;
-	return (count($attachments) >= $nth) ? $attachments[$nth-1] : null;
+
+
+	$attachments = clearbase_get_attachments($type, $folder, $nth);
+	$result = (count($attachments) >= $nth) ? $attachments[$nth-1] : null;
+	//allow another function to override the result
+	return apply_filters('clearbase_get_nth_attachment', $result);
 }
 
 

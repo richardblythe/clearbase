@@ -79,15 +79,18 @@ class Clearbase_Recent_Images_Widget extends WP_Widget {
             if (0 == count($all_folders)) {
               echo 'There are no recent images to display';
             } else {
-              $attachments = get_posts(array(
-                  'post_type'      => 'attachment',
-                  'post_mime_type' => 'image',
-                  'post_status'    => 'any',
-                  'post_parent__in'    => $all_folders,
-                  'orderby'        => 'date',
-                  'order'          => 'DESC',
-                  'posts_per_page'    => $columns * $rows
-              ));
+
+
+                $attachments = clearbase_get_attachments('image', $all_folders, $columns * $rows, array('orderby' => 'modified menu_order', 'order' => 'DESC'));
+//                $attachments = get_posts(array(
+//                  'post_type'      => 'attachment',
+//                  'post_mime_type' => 'image',
+//                  'post_status'    => 'any',
+//                  'post_parent__in'    => $all_folders,
+//                  'orderby'        => 'date',
+//                  'order'          => 'DESC',
+//                  'posts_per_page'    => $columns * $rows
+//              ));
               $IDs = array();
               foreach ($attachments as $a)
                   $IDs[] = $a->ID;

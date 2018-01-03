@@ -91,5 +91,5 @@ function clearbase_rest_pre_serve_request( $served, $result, $request, $server )
  */
 function clearbase_rest_api_nth_image( $data ) {
 	//the function: [clearbase_rest_pre_serve_request] serves the actual image...
-	return clearbase_get_nth_attachment('image', null, $data['nth']);
+	return clearbase_get_nth_attachment('image', null, $data['nth'], true);
 }

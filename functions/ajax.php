@@ -93,7 +93,7 @@ function _clearbase_sort_posts() {
     if ('DESC' == $order && $menu_order < count($posts)) {
         //If the menu_order has gotten out of sync.  We need to do a hard reset
         //of all posts in the specified folder to ensure that sorting by DESC will perform correctly.
-        $p = clearbase_get_attachments($post->post_parent);
+        $p = clearbase_get_attachments('', $post->post_parent);
         $posts = array();
         for ($i = 0, $c = count($p); $i < $c; $i++)
             $posts[$p[$i]->ID] = $p[$i]->menu_order;
