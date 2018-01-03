@@ -9,7 +9,7 @@ add_action( 'rest_api_init', function () {
 		'methods' => 'GET',
 		'callback' => 'clearbase_rest_api_get_children'
 	) );
-	
+
 } );
 
 
@@ -101,5 +101,6 @@ function clearbase_rest_api_nth_image( $data ) {
 }
 
 function clearbase_rest_api_get_children($data) {
-	return clearbase_get_children($data['folder_id']);
+	$result = clearbase_get_children($data['folder_id']);
+	return array_keys($result['folders']);
 }
