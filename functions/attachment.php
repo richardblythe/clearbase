@@ -1,7 +1,7 @@
 <?php
 function clearbase_get_attachments($type = '', $folder = null, $max = -1, $query_args = null) {
     //allow another method to return an array of attachments
-	$result = apply_filters('clearbase_get_attachments_pre', array($type, $folder, $max, $query_args));
+	$result = apply_filters('clearbase_get_attachments_pre', false, array($type, $folder, $max, $query_args));
 	//if another method has returned an array value, we'll assume that it's an array of attachments
     if (is_array($result))
 		return $result;

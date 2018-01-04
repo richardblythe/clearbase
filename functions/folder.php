@@ -201,7 +201,7 @@
 		return $folders;
 	}
 
-function clearbase_default_folder_image_src($folder_id = null, $image_size = 'thumbnail') {
+	function clearbase_default_folder_image_src($folder_id = null, $image_size = 'thumbnail') {
       $folder = clearbase_load_folder($folder_id);
       if (is_wp_error($folder))
         return $folder;
@@ -216,6 +216,12 @@ function clearbase_default_folder_image_src($folder_id = null, $image_size = 'th
       
       return apply_filters('clearbase_default_folder_image_src', $image_src, $folder, $image_size);
   }
+
+	function clearbase_get_folder_url($folder) {
+		$folder = clearbase_load_folder($folder);
+		return is_wp_error($folder) ? get_home_url() : get_permalink($folder->ID);
+	}
+
 
   function clearbase_is_root($relative = true) {
       global $cb_folder_root, $cb_post_id;
