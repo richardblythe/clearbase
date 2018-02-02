@@ -104,6 +104,9 @@ class Clearbase_Recent_Images_Widget extends WP_Widget {
               
             }
 
+            //render the user defined footer
+            echo isset ( $instance['footer'] ) ? do_shortcode($instance['footer']) : '';
+
             echo $after_widget;
     }
 
@@ -233,9 +236,9 @@ class Clearbase_Recent_Images_Widget extends WP_Widget {
     <p>
       <label for="<?php echo $this->get_field_id( 'link_to' ); ?>"><?php _e( 'Link To:', 'cb_recent_imgs' ); ?> </label>
        <select id="<?php echo $this->get_field_id( 'link_to' ); ?>" name="<?php echo $this->get_field_name( 'link_to' ); ?>">
-        <?php 
+        <?php
         $arrLinkTo = array(
-          'none'   => __( 'None', 'cb_recent_imgs' ), 
+          'none'   => __( 'None', 'cb_recent_imgs' ),
           'parent' => __( 'Parent Folder', 'cb_recent_imgs'),
           'file'   => __( 'Media File', 'cb_recent_imgs' ),
           'attachment_page' => __( 'Attachment Page', 'cb_recent_imgs' )
@@ -245,8 +248,18 @@ class Clearbase_Recent_Images_Widget extends WP_Widget {
             <?php echo $display; ?>
           </option>
         <?php endforeach; ?>
-      </select> 
+      </select>
     </p>
+    <p>
+        <label titl="Display text or html content in the footer of the widget" for="<?php echo $this->get_field_id( 'footer' ); ?>"><?php _e( 'Footer:', 'cb_recent_imgs' ); ?> </label>
+        <input type="text"
+               class="widefat"
+               id="<?php echo $this->get_field_id( 'footer' ); ?>"
+               name="<?php echo $this->get_field_name( 'footer' ); ?>"
+               value="<?php echo esc_html($instance['footer']) ?>"
+        >
+    </p>
+
 
   <?php
   }
@@ -260,6 +273,7 @@ class Clearbase_Recent_Images_Widget extends WP_Widget {
       $instance['columns'] = $new_instance['columns'];
       $instance['rows'] = $new_instance['rows'];
       $instance['link_to'] = $new_instance['link_to'];
+	  $instance['footer'] = $new_instance['footer'];
       return $instance;
   }
 
