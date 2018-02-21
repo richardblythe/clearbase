@@ -127,6 +127,13 @@ wp.media.model.Attachments = wp.media.model.Attachments.extend({
             menu_order = _.max(attachments, function(m){
               return m.get('menuOrder');
             }).get('menuOrder');
+
+            //If the menu_order has gotten out of sync.  We need to do a hard reset
+            //of the menuOrder to ensure that sorting by DESC will perform correctly.
+            if (order_desc && menu_order < wp.media.model.Attachments.all.length) {
+                menu_order = wp.media.model.Attachments.all.length;
+            }
+
         } else {
             //get the min menu order
             menu_order = _.min(attachments, function(m){
@@ -137,7 +144,7 @@ wp.media.model.Attachments = wp.media.model.Attachments.extend({
         attachments = _.chain(attachments).map( function( attachment, index ) {
             attachment.set( 'menuOrder', menu_order );
             menu_order = Math.max(order_desc ? menu_order - 1 : menu_order + 1, 0);
-            return [ attachment.id, menu_order ];
+            return [ attachment.id, attachment.get( 'menuOrder') ];
         }).object().value();
 
         if ( _.isEmpty( attachments ) ) {

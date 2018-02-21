@@ -511,7 +511,7 @@ jQuery(document).ready( function($) {
                 });
                 attachment.set('menuOrder', max.get('menuOrder') + 1);
              }).on('remove reset', function(){
-                //go ahead and sort to your hearts content
+                //go ahead and sort to your heart's content
                 $('#wp-media-grid ul.attachments.ui-sortable').sortable( 'option', 'disabled', false);
              });
         }
@@ -520,8 +520,8 @@ jQuery(document).ready( function($) {
         $(document.body).on('click', '#clearbase-workspace .addnew.media', function(e){
             // Prevent the default action from occuring.
             e.preventDefault();
-            if ($('#wp-media-grid').length) 
-                wp.media.frame.trigger( 'toggle:upload:attachment' );
+            if ($('#wp-media-grid').length)
+                $('#wp-media-grid .uploader-inline').toggle();
             else 
                 media.uploadFrame().open();
         })

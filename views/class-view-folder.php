@@ -95,7 +95,7 @@ class Clearbase_View_Folder extends Clearbase_View {
         if ($this->show_media && 'grid' === $this->mode ) {
           wp_enqueue_script( 'media-grid' );
           wp_enqueue_script( 'media-grid-overrides', CLEARBASE_URL . '/js/media-grid-overrides.js', array('media-grid'));
-          wp_enqueue_script( 'clearbase', CLEARBASE_URL . '/js/clearbase.js', array('media-grid', 'media-grid-overrides'));
+          wp_enqueue_script( 'clearbase', CLEARBASE_URL . '/js/clearbase.js', array('media-grid', 'media-grid-overrides'), '1.2');
 
           add_filter( 'admin_body_class', array(&$this, '_body_class' ));
 
